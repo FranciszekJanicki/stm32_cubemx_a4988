@@ -1,6 +1,7 @@
 #include "main.h"
 #include "a4988.hpp"
 #include "gpio.h"
+#include "tim.h"
 #include "usart.h"
 #include <cstdio>
 
@@ -10,6 +11,7 @@ int main()
     SystemClock_Config();
 
     MX_USART2_UART_Init();
+    MX_TIM1_Init();
     MX_GPIO_Init();
 
     using namespace A4988;
@@ -22,11 +24,20 @@ int main()
     auto constexpr DIR = GPIO::PA5;
     auto constexpr ENABLE = GPIO::PA6;
 
-    auto pwm_device = PWMDevice{};
+    auto pwm_device = PWMDevice{&htim1, TIM_CHANNEL_4, 65535U, 3.3F};
 
     auto a4988 = A4988::A4988{std::move(pwm_device), MS1, MS2, MS3, RESET, SLEEP, DIR, ENABLE};
 
     while (true) {
+        a4988.set_step();
+        a4988.set_frequency(10);
+        HAL_Delay(5000);
+        a4988.set_frequency(1000);
+        HAL_Delay(5000);
+        a4988.set_frequency(100000);
+        HAL_Delay(5000);
+        a4988.set_frequency(10000000);
+        HAL_Delay(5000);
     }
 
     return 0;

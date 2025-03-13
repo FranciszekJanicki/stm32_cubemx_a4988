@@ -147,7 +147,7 @@ namespace A4988 {
     void A4988::set_step(bool const step) const noexcept
     {
         if (this->initialized_) {
-            this->pwm_device_.set_compare_raw(step ? 10U : 0U);
+            this->pwm_device_.set_compare_raw(step ? PULSE_WIDTH_RAW : 0U);
         }
     }
 

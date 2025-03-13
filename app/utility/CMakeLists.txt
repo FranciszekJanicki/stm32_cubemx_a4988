@@ -27,6 +27,7 @@ target_compile_options(utility PUBLIC
     -std=c++23
     -Wall
     -Wextra
+    -Werror
     -Wconversion
     -Wshadow
     -Wpedantic

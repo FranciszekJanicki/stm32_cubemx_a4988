@@ -29,7 +29,8 @@ namespace Utility {
     void PWMDevice::set_compare_raw(std::uint16_t const raw) const noexcept
     {
         if (this->initialized_) {
-            printf("Raw: %d\n\r", raw);
+            std::printf("DUTY: %.2f%%\n\r",
+                        static_cast<float>(raw) / static_cast<float>(this->timer_->Init.Period) * 100.0F);
             __HAL_TIM_SetCompare(this->timer_, this->channel_mask_, raw);
         }
     }
@@ -56,12 +57,22 @@ namespace Utility {
 
     void PWMDevice::set_frequency(std::uint32_t const frequency) noexcept
     {
-        this->deinitialize();
-        this->timer_->Init.Period = Utility::freq_hz_to_count(frequency,
-                                                              this->timer_->Init.Prescaler,
-                                                              80000000UL,
-                                                              this->timer_->Init.ClockDivision);
-        this->initialize();
+        if (frequency > 0UL) {
+            this->deinitialize();
+
+            std::uint32_t constexpr CLOCK_HZ = 80000000UL;
+            std::uint32_t prescaler = 0UL;
+            std::uint32_t counter_period = CLOCK_HZ / frequency;
+            while (counter_period > 0xFFFF) {
+                prescaler++;
+                counter_period = CLOCK_HZ / ((prescaler + 1UL) * frequency) - 1UL;
+            }
+            this->timer_->Init.Prescaler = prescaler;
+            this->timer_->Init.Period = counter_period;
+            printf("FREQ: %lu hz, PSC: %lu, CP: %lu\n\r", frequency, prescaler, counter_period);
+
+            this->initialize();
+        }
     }
 
     void PWMDevice::initialize() noexcept

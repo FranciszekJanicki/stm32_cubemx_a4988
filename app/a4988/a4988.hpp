@@ -33,7 +33,6 @@ namespace A4988 {
         void set_quarter_microstep() const noexcept;
         void set_eighth_microstep() const noexcept;
         void set_sixteenth_microstep() const noexcept;
-        void set_thirtysecond_microstep() const noexcept;
 
         void set_direction(Direction const direction) const noexcept;
         void set_forward_direction() const noexcept;

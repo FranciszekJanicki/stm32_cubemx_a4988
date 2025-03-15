@@ -30,14 +30,6 @@ int main()
 
     while (true) {
         a4988.set_step();
-        a4988.set_frequency(10);
-        HAL_Delay(5000);
-        a4988.set_frequency(1000);
-        HAL_Delay(5000);
-        a4988.set_frequency(100000);
-        HAL_Delay(5000);
-        a4988.set_frequency(10000000);
-        HAL_Delay(5000);
     }
 
     return 0;

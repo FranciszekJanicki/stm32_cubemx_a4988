@@ -5,12 +5,9 @@ target_sources(a4988 PRIVATE
 )
 
 target_include_directories(a4988 PUBLIC 
-    "."
 )
 
 target_link_libraries(a4988 PRIVATE
-    stm32cubemx
-    utility
 )
 
 target_compile_options(a4988 PUBLIC
